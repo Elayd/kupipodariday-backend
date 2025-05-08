@@ -116,12 +116,8 @@ export class WishesService {
     const wish = await this.findOne({ where: { id } });
     const { name, link, image, price, description } = wish;
 
-    const existing = await this.wishesRepository.findOne({
-      where: { owner: { id: user.id }, link },
-    });
-
-    if (existing) {
-      throw new ConflictException('You have already copied this gift');
+    if (!wish) {
+      throw new NotFoundException('Gift not found');
     }
 
     await this.wishesRepository.increment({ id }, 'copied', 1);
